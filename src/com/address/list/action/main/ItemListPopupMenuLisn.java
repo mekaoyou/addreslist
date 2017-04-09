@@ -8,7 +8,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 /**
- * ��Ŀ�����б�JList������Ҽ��˵�������
+ * 联系人类型列表JList的鼠标右键菜单监听器
  * @author Alex
  *
  */
@@ -29,26 +29,26 @@ public class ItemListPopupMenuLisn implements MouseListener
 		list.requestFocus();
 		if (e.isPopupTrigger())
 		{
-			pop.show(list, e.getX(), e.getY());	//��ʾ�Ҽ��˵�
+			pop.show(list, e.getX(), e.getY());	//显示右键菜单
 			
-			//��ȡ��꽹��
+			//获取鼠标焦点
 			list.setSelectedIndex(row(e));
 		}
 	}
 	
 	/**
-	 * ����Ҽ��˵�
+	 * 添加右键菜单
 	 */
 	private void initPopmenu()
 	{
 		pop=new JPopupMenu();
-		popItem=new JMenuItem("ɾ��");
+		popItem=new JMenuItem("删除");
 		pop.add(popItem);
 		list.add(pop);
 	}
 	
 	/**
-	 * ͨ���߶ȼ���������¼����ڵ���
+	 * 通过高度计算鼠标点击事件所在的行
 	 * @return
 	 */
 	private int row(MouseEvent e)
@@ -63,3 +63,4 @@ public class ItemListPopupMenuLisn implements MouseListener
 	
 	public JMenuItem getPopItem(){return popItem;}
 }
+
