@@ -51,7 +51,7 @@ public class QueryMobilePanel extends JPanel
 		
 		JTextArea result = new JTextArea();
 		result.setColumns(50);
-		result.setRows(10);
+		result.setRows(17);
 		
 	    //为按钮添加监听器
 		selectButton.addActionListener(new ActionListener()
@@ -79,7 +79,7 @@ public class QueryMobilePanel extends JPanel
 		topPanel.add(selectButton);
 		topPanel.add(result);
 		
-		this.add(topPanel,BorderLayout.NORTH);
+		this.add(topPanel,BorderLayout.CENTER);
 	}
 
 	public void setUsername(String username){this.username = username;}

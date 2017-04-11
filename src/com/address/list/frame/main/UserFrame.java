@@ -26,7 +26,9 @@ import com.address.list.action.main.AboutLisn;
 import com.address.list.action.main.AddItemAction;
 import com.address.list.action.main.ApplicationAction;
 import com.address.list.action.main.SelectItemAction;
+import com.address.list.action.main.SelectKDAction;
 import com.address.list.action.main.SelectMobleAction;
+import com.address.list.action.main.SelectPYAction;
 import com.address.list.action.main.SelectPostAction;
 import com.address.list.action.main.SelectTelAction;
 import com.address.list.action.main.TopPanelBtnLisn;
@@ -51,6 +53,8 @@ public class UserFrame
 	private QueryPostcodePanel selectPostPanel;//查询邮编Panel
 	private QueryMobilePanel selectMoblePanel;//查询手机号Panel
 	private QueryTelPanel selectTelPanel;//查询座机号Panel
+	private QueryKDPanel selectKDPanel;//查询快递信息Panel
+	private QueryPYPanel selectPYPanel;//查询汉字拼音Panel
 	private UserinforsysPanel userPanel;//管理用户账户Panel
 	private DateAndTime dateandtime;//时间状态栏
 	
@@ -130,6 +134,8 @@ public class UserFrame
 		SelectPostAction postAction = new SelectPostAction(this);
 		SelectMobleAction mobleAction = new SelectMobleAction(this);
 		SelectTelAction telAction = new SelectTelAction(this);
+		SelectKDAction kdAction = new SelectKDAction(this);
+		SelectPYAction pyAction = new SelectPYAction(this);
 		
 		//创建菜单项
 		JMenuItem exitItem = new JMenuItem("退出(Q)");
@@ -163,9 +169,11 @@ public class UserFrame
 		toolbar.add(selectAction);
 		toolbar.add(addAction);
 		toolbar.addSeparator(new Dimension(5,30));
+		toolbar.add(kdAction);
 		toolbar.add(postAction);
 		toolbar.add(mobleAction);
 		toolbar.add(telAction);
+		toolbar.add(pyAction);
 		
 		//添加菜单条和工具条
 		userFrame.setJMenuBar(menubar);
@@ -178,6 +186,14 @@ public class UserFrame
 		userFrame.add(topPanel,BorderLayout.NORTH);		
 		
 		//数据显示区
+		selectPYPanel = new QueryPYPanel(this, username);
+		userFrame.add(selectPYPanel);
+		selectPYPanel.setVisible(false);
+
+		selectKDPanel = new QueryKDPanel(this, username);
+		userFrame.add(selectKDPanel);
+		selectKDPanel.setVisible(false);
+		
 		selectTelPanel = new QueryTelPanel(this, username);
 		userFrame.add(selectTelPanel);
 		selectTelPanel.setVisible(false);
@@ -266,6 +282,8 @@ public class UserFrame
 					&&!addPanel.isVisible()
 					&&!selectPostPanel.isVisible()
 					&&!selectTelPanel.isVisible()
+					&&!selectKDPanel.isVisible()
+					&&!selectPYPanel.isVisible()
 					&&!selectMoblePanel.isVisible())
 			{
 				toolbar2.setVisible(b);
@@ -303,6 +321,14 @@ public class UserFrame
 				{
 					selectTelPanel.setVisible(b);					
 				}
+				if (selectKDPanel.isVisible())
+				{
+					selectKDPanel.setVisible(b);					
+				}
+				if (selectPYPanel.isVisible())
+				{
+					selectPYPanel.setVisible(b);					
+				}
 				userFrame.add(userPanel);
 				toolbar2.setVisible(!b);
 				userPanel.setVisible(!b);
@@ -322,6 +348,8 @@ public class UserFrame
 		selectPostPanel.setVisible(b);
 		selectMoblePanel.setVisible(b);
 		selectTelPanel.setVisible(b);
+		selectKDPanel.setVisible(b);
+		selectPYPanel.setVisible(b);
 		
 		panel.setVisible(!b);
 	}
@@ -341,4 +369,8 @@ public class UserFrame
 	public void setMoblePanel(QueryMobilePanel selectMoblePanel){this.selectMoblePanel=selectMoblePanel;}
 	public QueryTelPanel getQueryTelPanel(){return selectTelPanel;}
 	public void setQueryTelPanel(QueryTelPanel selectTelPanel){this.selectTelPanel=selectTelPanel;}
+	public QueryKDPanel getQueryKDPanel(){return selectKDPanel;}
+	public void setQueryKDPanel(QueryKDPanel selectKDPanel){this.selectKDPanel=selectKDPanel;}
+	public QueryPYPanel getQueryPYPanel(){return selectPYPanel;}
+	public void setQueryPYPanel(QueryPYPanel selectPYPanel){this.selectPYPanel=selectPYPanel;}
 }
