@@ -18,7 +18,7 @@ public class AddItemLisn implements ActionListener
 	private AddContactPanel addPanel;
 	private String username;
 	private UserFrame user;
-	private String contactName,date,address,gender,remarked, moble;
+	private String contactName,date,address,gender,remarked, moble, type;
 	
 	public AddItemLisn(AddContactPanel addPanel,String username,UserFrame user)
 	{
@@ -37,6 +37,7 @@ public class AddItemLisn implements ActionListener
 		gender=(String) addPanel.getGenderBox().getSelectedItem();
 		remarked=addPanel.getRemarkArea().getText();
 		moble=addPanel.getSumField().getText();
+		type = (String) addPanel.getTypeBox().getSelectedItem();
 		//处理数据
 		if (moble.length()<=0 || contactName.equals("请输入联系人") || contactName.matches(" *"))
 		{
@@ -56,7 +57,7 @@ public class AddItemLisn implements ActionListener
 			{
 				address=address.substring(0, 20);
 			}
-			if (ContactDao.getInstance().addContact(username, contactName, moble, date, address, gender, remarked))
+			if (ContactDao.getInstance().addContact(username, contactName, moble, date, address, gender, remarked, type))
 			{
 				//添加提示信息
 				new FlyDialog(user.getUserFrame(),"添加成功!");

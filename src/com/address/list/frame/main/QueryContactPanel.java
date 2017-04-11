@@ -83,7 +83,7 @@ public class QueryContactPanel extends JPanel
 		{
 			obj=new Object[1][3];
 		}
-		Object[] columnTitle={"ID","联系人","电话"};
+		Object[] columnTitle={"ID","联系人","电话","分组"};
 		table=new JTable(obj,columnTitle);
 		table.getTableHeader().setReorderingAllowed(false);//设置表格列不能拖动
 		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//设置一次只能选中一行

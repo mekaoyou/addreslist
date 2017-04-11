@@ -15,6 +15,7 @@ public class ContactEntity
 	private String moble;
 	private String address;
 	private String remarked;
+	private String type;
 	public long getId()
 	{
 		return id;
@@ -78,6 +79,14 @@ public class ContactEntity
 	public void setRemarked(String remarked)
 	{
 		this.remarked = remarked;
+	}
+	public String getType()
+	{
+		return type;
+	}
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 	
 }

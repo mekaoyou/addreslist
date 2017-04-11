@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS `tbl_contact`;
 CREATE TABLE IF NOT EXISTS `tbl_contact`(
 	`id` int(6) unsigned NOT NULL AUTO_INCREMENT,
 	`user_id` int(6) unsigned NOT NULL,
+	`contact_type` int(6) unsigned NOT NULL,
   	`contactname` varchar(32) NOT NULL COMMENT '联系人用户名',
   	`moble` varchar(32) NOT NULL COMMENT '电话',
   	`gender` varchar(6) NULL DEFAULT NULL COMMENT '性别',
@@ -26,4 +27,13 @@ CREATE TABLE IF NOT EXISTS `tbl_contact`(
   	`remarked` varchar(128) NULL DEFAULT NULL COMMENT '备注',
 	primary key(id)  
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='联系人表';
+
+DROP TABLE IF EXISTS `tbl_contact_type`;
+CREATE TABLE IF NOT EXISTS `tbl_contact_type`(
+	`id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+	`type_name` varchar(32) NOT NULL,
+	primary key(id)  
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='联系人分类';
+
+
 

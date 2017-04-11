@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -14,30 +15,31 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import com.address.list.action.JTextComponentFocuseLisn;
 import com.address.list.action.PopupMenuAction;
+import com.address.list.action.main.AddContactTypeLisn;
 import com.address.list.action.main.AddItemLisn;
 import com.address.list.action.main.ClearBtnLisn;
 import com.address.list.action.main.SelectDateListn;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.common.NumberField;
+import com.address.list.model.ContactDao;
 
 
 /**
- * 增加收支项目的组件
+ * 增加联系人的组件
  * @author Alex
  *
  */
 @SuppressWarnings("serial")
 public class AddContactPanel extends JPanel
 {
-	private JComboBox genderBox;//选择项目类型，收入或支出的下拉列表
+	private JComboBox genderBox, typeBox;//选择项目类型，收入或支出的下拉列表
 	private JTextField dateField;//输入日期
 	private LimitTextField contactNameField,addressField;//描述信息，长度限制为20
 	private JButton dateBtn,handInBtn,clearBtn;//选择日期的按钮,提交按钮,清空按钮
-	private NumberField sumField;//输入金额的integerfield
+	private NumberField sumField;//输入电话号码
 	private JTextArea remarkArea;//输入备注信息的textarea
 	
 	private String username;
@@ -49,12 +51,13 @@ public class AddContactPanel extends JPanel
 		this.user = user;
 		init();
 		initcombox();
+		initContactType();
 		initLisn();
 	}
 	
 	public void init()
 	{
-		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  新增收支项目  ------"));
+		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  新增联系人  ------"));
 		GridBagLayout gbl=new GridBagLayout();
 		this.setLayout(gbl);
 		
@@ -91,7 +94,17 @@ public class AddContactPanel extends JPanel
 		
 		sumField=new NumberField();
 		sumField.setColumns(11);
-		sumPanel.add(sumField);				
+		sumPanel.add(sumField);			
+
+		JLabel typeLable=new JLabel("分组:*");
+		sumPanel.add(typeLable);		
+		
+		typeBox=new JComboBox();
+		sumPanel.add(typeBox);
+		
+		JButton plusBtn = new JButton("+");
+		sumPanel.add(plusBtn);		
+		plusBtn.addActionListener(new AddContactTypeLisn(this));
 		
 		JPanel datePanel=new JPanel();
 		this.add(datePanel,gbc);
@@ -157,6 +170,16 @@ public class AddContactPanel extends JPanel
 		genderBox.addItem("女");
 	}
 	
+	public void initContactType()
+	{
+		typeBox.removeAllItems();
+		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		for (Object[] obj : typs)
+		{
+			typeBox.addItem(obj[0]);
+		}
+	}
+	
 	/**
 	 * 添加监听器
 	 */
@@ -172,10 +195,11 @@ public class AddContactPanel extends JPanel
 	
 	public JTextField getContactName(){return contactNameField;}
 	public JComboBox getGenderBox(){return genderBox;}
+	public JComboBox getTypeBox(){return typeBox;}
 	public JTextField getDateField(){return dateField;}
 	public JTextField getAddressField(){return addressField;}
 	public NumberField getSumField(){return sumField;}
 	public JTextArea getRemarkArea(){return remarkArea;}
-	
+	public UserFrame getUserFrame(){return this.user;}
 	
 }

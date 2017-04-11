@@ -42,7 +42,7 @@ public class SelectItemLisn implements ActionListener
 			obj=new Object[1][3];
 		}
 		
-		Object[] columTitle={"ID","联系人","电话"};
+		Object[] columTitle={"ID","联系人","电话","分组"};
 		//刷新表格，显示查询结果
 		if (panel.getScrol()!=null)
 		{
