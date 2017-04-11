@@ -10,10 +10,12 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,11 +24,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.address.list.action.PopupMenuAction;
+import com.address.list.action.main.AddContactTypeLisn;
 import com.address.list.action.main.Disposaction;
 import com.address.list.action.main.SelectDateListn;
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.common.NumberField;
+import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 import com.address.list.model.ContactEntity;
 
@@ -36,7 +40,7 @@ import com.address.list.model.ContactEntity;
  * @author Alex
  *
  */
-public class ContactInforDialog
+public class ContactInforDialog implements UserEditPanel
 {
 	private UserFrame user;//用户界面主窗体
 	private QueryContactPanel panel;
@@ -47,7 +51,8 @@ public class ContactInforDialog
 	private NumberField mobleField;//电话
 	private JTextArea remarkArea;//显示备注
 	private JCheckBox maleBox,femaleBox;//性别
-	private JButton dateBtn,cancalBtn,handinBtn;//日期按钮，底部按钮
+	private JButton dateBtn,cancalBtn,handinBtn,plusBtn;//日期按钮，底部按钮
+	private JComboBox typeBox;
 
 	public ContactInforDialog(UserFrame user,QueryContactPanel panel)
 	{
@@ -86,7 +91,6 @@ public class ContactInforDialog
 		cotactPanel.setLayout(new BorderLayout(5,0));
 		cotactPanel.add(new JLabel("姓名:*"),BorderLayout.WEST);
 		contactNameField=new JTextField();
-		contactNameField.setEditable(false);
 		cotactPanel.add(contactNameField);
 		
 		genderPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -99,6 +103,16 @@ public class ContactInforDialog
 		ButtonGroup bg=new ButtonGroup();
 		bg.add(maleBox);
 		bg.add(femaleBox);
+		
+		JLabel typeLable=new JLabel("     分组:*");
+		genderPanel.add(typeLable);		
+		
+		typeBox=new JComboBox();
+		genderPanel.add(typeBox);
+		
+		plusBtn = new JButton("+");
+		genderPanel.add(plusBtn);		
+		plusBtn.addActionListener(new AddContactTypeLisn(this.user.getUserFrame(), this));
 		
 		moblePanel.setLayout(new BorderLayout(5,0));
 		moblePanel.add(new JLabel("电话:*"),BorderLayout.WEST);
@@ -199,11 +213,23 @@ public class ContactInforDialog
 		{
 			new FlyDialog(user.getUserFrame(), "数据有误");
 		}
-
+		
+		initContactType();
+		typeBox.setSelectedItem(contact.getType());
 		
 		//设置控件不可操作
 		setEnabled(false);		
 		
+	}
+	
+	public void initContactType()
+	{
+		typeBox.removeAllItems();
+		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		for (Object[] obj : typs)
+		{
+			typeBox.addItem(obj[0]);
+		}
 	}
 	
 	/**
@@ -212,12 +238,15 @@ public class ContactInforDialog
 	 */
 	public void setEnabled(boolean b)
 	{
+		contactNameField.setEditable(b);
 		maleBox.setEnabled(b);
 		femaleBox.setEnabled(b);
 		dateBtn.setEnabled(b);
 		mobleField.setEditable(b);
 		addressField.setEditable(b);
 		remarkArea.setEditable(b);
+		typeBox.setEnabled(b);
+		plusBtn.setEnabled(b);
 	}
 
 	public QueryContactPanel getPanel(){return panel;}
@@ -232,4 +261,5 @@ public class ContactInforDialog
 	public JButton getDateBtn(){return dateBtn;}
 	public JButton getCancalBtn(){return cancalBtn;}
 	public JButton getHandinBtn(){return handinBtn;}	
+	public JComboBox getTypeBox(){return typeBox;}
 }

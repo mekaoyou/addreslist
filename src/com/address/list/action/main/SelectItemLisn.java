@@ -39,7 +39,7 @@ public class SelectItemLisn implements ActionListener
 		//处理结果
 		if (obj==null)
 		{
-			obj=new Object[1][3];
+			obj=new Object[1][4];
 		}
 		
 		Object[] columTitle={"ID","联系人","电话","分组"};

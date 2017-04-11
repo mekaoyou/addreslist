@@ -81,7 +81,7 @@ public class QueryContactPanel extends JPanel
 		Object[][] obj=ContactDao.getInstance().queryAll(username);
 		if (obj==null)
 		{
-			obj=new Object[1][3];
+			obj=new Object[1][4];
 		}
 		Object[] columnTitle={"ID","联系人","电话","分组"};
 		table=new JTable(obj,columnTitle);

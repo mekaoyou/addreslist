@@ -21,7 +21,7 @@ public class UpdateItemLisn implements ActionListener
 	private UserFrame user;
 	private QueryContactPanel panel;
 	private ContactInforDialog dialog;
-	private String date,address,gender,remarked;
+	private String date,address,gender,remarked,type,name;
 	private int row;
 	private String moble;
 	private Object itemid;
@@ -77,10 +77,16 @@ public class UpdateItemLisn implements ActionListener
 		{
 			gender="女";
 		}
+		type = (String)dialog.getTypeBox().getSelectedItem();
+		name = dialog.getItemField().getText();
 		//处理数据
 		if (moble.matches(" *"))
 		{
 			JOptionPane.showMessageDialog(dialog.getDialog(), "电话不能为空!");
+		}
+		else if(name.matches(" *"))
+		{
+			JOptionPane.showMessageDialog(dialog.getDialog(), "联系人姓名不能为空!");
 		}
 		else
 		{
@@ -97,10 +103,12 @@ public class UpdateItemLisn implements ActionListener
 				address=address.substring(0, 20);
 			}
 			//执行数据库操作
-			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked))
+			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked, type, name))
 			{
 				//更新界面信息
+				panel.getTable().setValueAt(name, row, 1);
 				panel.getTable().setValueAt(moble, row, 2);
+				panel.getTable().setValueAt(type, row, 3);
 				//隐藏dialog
 				dialog.getDialog().dispose();
 				

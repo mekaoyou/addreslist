@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ContactDao extends AbstractDao
 {
-	private static final String COLUMNS = " id,user_id,contactname,moble,gender,birthday,address,remarked,type_name ";
+	private static final String COLUMNS = " a.id,user_id,contactname,moble,gender,birthday,address,remarked,type_name ";
 	
 	private static ContactDao instance;
 	
@@ -93,10 +93,10 @@ public class ContactDao extends AbstractDao
 	 * @param remark
 	 * @return
 	 */
-	public boolean update(long id, String moble, String gender, String birthday, String address, String remark)
+	public boolean update(long id, String moble, String gender, String birthday, String address, String remark, String type, String name)
 	{
-		String sql ="update tbl_contact set moble=?,gender=?,birthday=?,address=?,remarked=? where id=?";
-		return dml(sql, moble, gender, birthday, address, remark, id);
+		String sql ="update tbl_contact set contactname=?,moble=?,gender=?,birthday=?,address=?,remarked=?,contact_type=(select id from tbl_contact_type where type_name=?) where id=?";
+		return dml(sql, name, moble, gender, birthday, address, remark, type, id);
 	}
 	/**
 	 * 增加联系人分组

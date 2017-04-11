@@ -26,10 +26,14 @@ import com.address.list.action.main.AboutLisn;
 import com.address.list.action.main.AddItemAction;
 import com.address.list.action.main.ApplicationAction;
 import com.address.list.action.main.SelectItemAction;
+import com.address.list.action.main.SelectMobleAction;
+import com.address.list.action.main.SelectPostAction;
+import com.address.list.action.main.SelectTelAction;
 import com.address.list.action.main.TopPanelBtnLisn;
 import com.address.list.action.main.UpdateUserInforsysAction;
 import com.address.list.frame.common.DateAndTime;
 import com.address.list.frame.common.UserinforsysPanel;
+import com.address.list.model.access.AccessC3p0DBUtil;
 
 /**
  * 通讯录主界面
@@ -44,6 +48,9 @@ public class UserFrame
 	private JToolBar toolbar,toolbar2;//工具条
 	private QueryContactPanel selectPanel;//查询panel
 	private AddContactPanel addPanel;//增加项目panel
+	private QueryPostcodePanel selectPostPanel;//查询邮编Panel
+	private QueryMobilePanel selectMoblePanel;//查询手机号Panel
+	private QueryTelPanel selectTelPanel;//查询座机号Panel
 	private UserinforsysPanel userPanel;//管理用户账户Panel
 	private DateAndTime dateandtime;//时间状态栏
 	
@@ -53,6 +60,8 @@ public class UserFrame
 		this.username = username;
 		init();
 		inituserAdmin();
+
+		AccessC3p0DBUtil.init("moble");
 	}
 
 	/**
@@ -118,6 +127,9 @@ public class UserFrame
 		//创建工具栏按钮
 		SelectItemAction selectAction=new SelectItemAction(this);
 		AddItemAction addAction=new AddItemAction(this);
+		SelectPostAction postAction = new SelectPostAction(this);
+		SelectMobleAction mobleAction = new SelectMobleAction(this);
+		SelectTelAction telAction = new SelectTelAction(this);
 		
 		//创建菜单项
 		JMenuItem exitItem = new JMenuItem("退出(Q)");
@@ -151,6 +163,9 @@ public class UserFrame
 		toolbar.add(selectAction);
 		toolbar.add(addAction);
 		toolbar.addSeparator(new Dimension(5,30));
+		toolbar.add(postAction);
+		toolbar.add(mobleAction);
+		toolbar.add(telAction);
 		
 		//添加菜单条和工具条
 		userFrame.setJMenuBar(menubar);
@@ -163,9 +178,22 @@ public class UserFrame
 		userFrame.add(topPanel,BorderLayout.NORTH);		
 		
 		//数据显示区
+		selectTelPanel = new QueryTelPanel(this, username);
+		userFrame.add(selectTelPanel);
+		selectTelPanel.setVisible(false);
+
+		selectMoblePanel = new QueryMobilePanel(this, username);
+		userFrame.add(selectMoblePanel);
+		selectMoblePanel.setVisible(false);
+
+		selectPostPanel = new QueryPostcodePanel(this, username);
+		userFrame.add(selectPostPanel);
+		selectPostPanel.setVisible(false);
+
 		addPanel=new AddContactPanel(username,this);
 		userFrame.add(addPanel);
 		addPanel.setVisible(false);
+		
 		
 		selectPanel=new QueryContactPanel(this,username);
 		userFrame.add(selectPanel);		
@@ -234,7 +262,11 @@ public class UserFrame
 		
 		if (btn==itemBtn)
 		{
-			if (!selectPanel.isVisible()&&!addPanel.isVisible())
+			if (!selectPanel.isVisible()
+					&&!addPanel.isVisible()
+					&&!selectPostPanel.isVisible()
+					&&!selectTelPanel.isVisible()
+					&&!selectMoblePanel.isVisible())
 			{
 				toolbar2.setVisible(b);
 				userPanel.setVisible(b);
@@ -259,6 +291,18 @@ public class UserFrame
 				{
 					addPanel.setVisible(b);					
 				}
+				if (selectPostPanel.isVisible())
+				{
+					selectPostPanel.setVisible(b);					
+				}
+				if (selectMoblePanel.isVisible())
+				{
+					selectMoblePanel.setVisible(b);					
+				}
+				if (selectTelPanel.isVisible())
+				{
+					selectTelPanel.setVisible(b);					
+				}
 				userFrame.add(userPanel);
 				toolbar2.setVisible(!b);
 				userPanel.setVisible(!b);
@@ -275,8 +319,11 @@ public class UserFrame
 		boolean b=false;
 		selectPanel.setVisible(b);
 		addPanel.setVisible(b);
+		selectPostPanel.setVisible(b);
+		selectMoblePanel.setVisible(b);
+		selectTelPanel.setVisible(b);
 		
-		panel.setVisible(true);
+		panel.setVisible(!b);
 	}
 
 	public JFrame getUserFrame(){return userFrame;}
@@ -288,4 +335,10 @@ public class UserFrame
 	public JButton getItemBtn(){return itemBtn;}
 	public JButton getUserBtn(){return userBtn;}
 	public UserinforsysPanel getUserPanel(){return userPanel;}
+	public QueryPostcodePanel getQueryPostPanel(){return selectPostPanel;}
+	public void setQueryPostPanel(QueryPostcodePanel selectPanel){this.selectPostPanel=selectPanel;}
+	public QueryMobilePanel getQueryMoblePanel(){return selectMoblePanel;}
+	public void setMoblePanel(QueryMobilePanel selectMoblePanel){this.selectMoblePanel=selectMoblePanel;}
+	public QueryTelPanel getQueryTelPanel(){return selectTelPanel;}
+	public void setQueryTelPanel(QueryTelPanel selectTelPanel){this.selectTelPanel=selectTelPanel;}
 }

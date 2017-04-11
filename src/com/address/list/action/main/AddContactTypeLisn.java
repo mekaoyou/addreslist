@@ -14,15 +14,18 @@ import javax.swing.JFrame;
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.main.AddContactPanel;
+import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 
 public class AddContactTypeLisn implements ActionListener
 {
-	private AddContactPanel contactPanel;
+	private JFrame parentFrame;
+	private UserEditPanel editPanel;
 	
-	public AddContactTypeLisn(AddContactPanel contactPanel)
+	public AddContactTypeLisn(JFrame parentFrame, UserEditPanel editPanel)
 	{
-		this.contactPanel = contactPanel;
+		this.parentFrame = parentFrame;
+		this.editPanel = editPanel;
 	}
 
 	@Override
@@ -33,7 +36,7 @@ public class AddContactTypeLisn implements ActionListener
 
 	private void init()
 	{
-		JDialog addDialog = new JDialog(getParentFrame(), "增加联系人分组", true);
+		JDialog addDialog = new JDialog(parentFrame, "增加联系人分组", true);
 		addDialog.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		
 		LimitTextField typeName = new LimitTextField(6);
@@ -50,12 +53,12 @@ public class AddContactTypeLisn implements ActionListener
 				String name = typeName.getText();
 				if(name.matches(" *"))
 				{
-					new FlyDialog(getParentFrame(), "联系人分组名不能为空!");
+					new FlyDialog(parentFrame, "联系人分组名不能为空!");
 					return;
 				}
 				if(ContactDao.getInstance().addContactType(name))
 				{
-					contactPanel.initContactType();
+					editPanel.initContactType();
 					addDialog.dispose();
 				}
 			}
@@ -68,7 +71,7 @@ public class AddContactTypeLisn implements ActionListener
 	/**显示设置窗口*/
 	private void showDialg(JDialog addDialog)
 	{
-		Point p=getParentFrame().getLocationOnScreen();
+		Point p=parentFrame.getLocationOnScreen();
 		
 		//这里要考虑到弹出的子窗体位置会不会跑出屏幕边缘的问题
 		Dimension d=Toolkit.getDefaultToolkit().getScreenSize();
@@ -82,10 +85,5 @@ public class AddContactTypeLisn implements ActionListener
 		addDialog.setLocation(x,y);
 		addDialog.setSize(220,130);
 		addDialog.setVisible(true);
-	}
-	
-	private JFrame getParentFrame()
-	{
-		return this.contactPanel.getUserFrame().getUserFrame();
 	}
 }

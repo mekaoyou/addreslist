@@ -24,6 +24,7 @@ import com.address.list.action.main.ClearBtnLisn;
 import com.address.list.action.main.SelectDateListn;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.common.NumberField;
+import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 
 
@@ -33,7 +34,7 @@ import com.address.list.model.ContactDao;
  *
  */
 @SuppressWarnings("serial")
-public class AddContactPanel extends JPanel
+public class AddContactPanel extends JPanel implements UserEditPanel
 {
 	private JComboBox genderBox, typeBox;//选择项目类型，收入或支出的下拉列表
 	private JTextField dateField;//输入日期
@@ -104,7 +105,7 @@ public class AddContactPanel extends JPanel
 		
 		JButton plusBtn = new JButton("+");
 		sumPanel.add(plusBtn);		
-		plusBtn.addActionListener(new AddContactTypeLisn(this));
+		plusBtn.addActionListener(new AddContactTypeLisn(this.user.getUserFrame(), this));
 		
 		JPanel datePanel=new JPanel();
 		this.add(datePanel,gbc);
