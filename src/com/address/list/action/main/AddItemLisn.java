@@ -11,7 +11,7 @@ import com.address.list.frame.main.UserFrame;
 import com.address.list.model.ContactDao;
 
 /**
- * 增加新收支项目的监听器
+ * 增加新联系人的监听器
  * @author Alex
  *
  */
@@ -40,6 +40,11 @@ public class AddItemLisn implements ActionListener
 		remarked=addPanel.getRemarkArea().getText();
 		moble=addPanel.getSumField().getText();
 		type = (String) addPanel.getTypeBox().getSelectedItem();
+		qq = addPanel.getQqField().getText();
+		email = addPanel.getEmailField().getText();
+		unit = addPanel.getUnitField().getText();
+		post = addPanel.getPostField().getText();
+		img = addPanel.getImg();
 		//处理数据
 		if (moble.length()<=0 || contactName.equals("请输入联系人") || contactName.matches(" *"))
 		{
@@ -64,16 +69,15 @@ public class AddItemLisn implements ActionListener
 			{
 				address=address.substring(0, 20);
 			}
-//			if (ContactDao.getInstance().addContact(username, contactName, moble, date, address, gender, remarked, type))
-//			{
-//				//添加提示信息
-//				new FlyDialog(user.getUserFrame(),"添加成功!");
-//				
-//				addPanel.getDateField().setText("1990-01-01");
-//				addPanel.getAddressField().setText("");
-//				addPanel.getRemarkArea().setText("");
-//				addPanel.getSumField().setText("");				
-//			}
+			if (ContactDao.getInstance().addContact(username, contactName, moble, 
+																		date, address, gender, remarked, type,
+																		qq,email,unit,post,img))
+			{
+				//添加提示信息
+				new FlyDialog(user.getUserFrame(),"添加成功!");
+				
+				addPanel.clear();			
+			}
 		}
 	}
 }

@@ -5,11 +5,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.main.AddContactPanel;
 import com.address.list.frame.main.UserFrame;
 
 /**
- * 新增收支项目Action
+ * 新增联系人Action
  * @author Alex
  *
  */
@@ -34,7 +35,7 @@ public class AddItemAction extends AbstractAction
 			{
 				user.getUserFrame().remove(user.getAddPanel());
 			}
-			AddContactPanel addPanel=new AddContactPanel(user.getUsername(),user);
+			AddContactPanel addPanel=new AddContactPanel(user.getUsername(),user,Constant.ADD);
 			user.setAddPanel(addPanel);
 			user.getUserFrame().add(user.getAddPanel());
 		}

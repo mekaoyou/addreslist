@@ -43,7 +43,7 @@ public class QueryContactPanel extends JPanel
 	private LimitTextField queryField;
 	private JComboBox typeBox;//选择分组
 	
-	private static final Object[] columnTitle={"ID","联系人","电话","分组"};
+	private static final Object[] columnTitle={"ID","联系人","电话","分组","性别","QQ","E-Mail","单位"};
 	
 	public static boolean isMove=true;//是否启动表格的鼠标移动事件
 	

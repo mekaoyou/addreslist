@@ -3,6 +3,7 @@ package com.address.list.action.main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.main.ContactInforDialog;
 import com.address.list.frame.main.QueryContactPanel;
@@ -39,13 +40,11 @@ public class DelItemLisn implements ActionListener
 		}
 		if (row!=-1&&itemid!=null)
 		{
-			ContactInforDialog dialog=new ContactInforDialog(user,panel);
+			ContactInforDialog dialog=new ContactInforDialog(user,panel,Constant.DEL);
 			
 			dialog.getDialog().setTitle("确认删除该联系人?");
-			dialog.getHandinBtn().setText("删除");
-			
 			//为删除按钮添加监听器
-			dialog.getHandinBtn().addActionListener(new delAction(itemid,panel,row,dialog,user));
+			dialog.getAddPanel().getHandInBtn().addActionListener(new delAction(itemid,panel,row,dialog,user));
 			
 			dialog.getDialog().setVisible(true);			
 		}
@@ -73,7 +72,7 @@ public class DelItemLisn implements ActionListener
 			if (ContactDao.getInstance().delete((long)itemid))
 			{
 				//移除界面数据
-				for (int j = 0; j < 3; j++)
+				for (int j = 0; j < 8; j++)
 				{
 					panel.getTable().setValueAt(null, row, j);
 				}

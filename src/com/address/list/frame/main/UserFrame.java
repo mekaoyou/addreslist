@@ -34,6 +34,7 @@ import com.address.list.action.main.SelectPostAction;
 import com.address.list.action.main.SelectTelAction;
 import com.address.list.action.main.TopPanelBtnLisn;
 import com.address.list.action.main.UpdateUserInforsysAction;
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.common.DateAndTime;
 import com.address.list.frame.common.UserinforsysPanel;
 import com.address.list.model.access.AccessC3p0DBUtil;
@@ -214,7 +215,7 @@ public class UserFrame
 		userFrame.add(selectPostPanel);
 		selectPostPanel.setVisible(false);
 
-		addPanel=new AddContactPanel(username,this);
+		addPanel=new AddContactPanel(username,this,Constant.ADD);
 		userFrame.add(addPanel);
 		addPanel.setVisible(false);
 		

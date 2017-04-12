@@ -16,6 +16,12 @@ public class ContactEntity
 	private String address;
 	private String remarked;
 	private String type;
+	private String qq;
+	private String email;
+	private String post;
+	private String unit;
+	private String img;
+	
 	public long getId()
 	{
 		return id;
@@ -87,6 +93,46 @@ public class ContactEntity
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+	public String getQq()
+	{
+		return qq;
+	}
+	public void setQq(String qq)
+	{
+		this.qq = qq;
+	}
+	public String getEmail()
+	{
+		return email;
+	}
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+	public String getPost()
+	{
+		return post;
+	}
+	public void setPost(String post)
+	{
+		this.post = post;
+	}
+	public String getUnit()
+	{
+		return unit;
+	}
+	public void setUnit(String unit)
+	{
+		this.unit = unit;
+	}
+	public String getImg()
+	{
+		return img;
+	}
+	public void setImg(String img)
+	{
+		this.img = img;
 	}
 	
 }

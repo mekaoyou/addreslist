@@ -10,11 +10,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,11 +30,13 @@ import com.address.list.action.main.AddContactTypeLisn;
 import com.address.list.action.main.AddItemLisn;
 import com.address.list.action.main.ClearBtnLisn;
 import com.address.list.action.main.SelectDateListn;
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.common.NumberField;
 import com.address.list.frame.main.filter.ImageFilter;
 import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
+import com.address.list.model.ContactEntity;
 
 
 /**
@@ -46,28 +50,30 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	private JComboBox genderBox, typeBox;//选择项目类型，收入或支出的下拉列表
 	private JTextField dateField;//输入日期
 	private LimitTextField contactNameField,addressField,emailField,unitField;//描述信息，长度限制为20
-	private JButton dateBtn,handInBtn,clearBtn;//选择日期的按钮,提交按钮,清空按钮
+	private JButton dateBtn,handInBtn,clearBtn,imgBtn;//选择日期的按钮,提交按钮,清空按钮
 	private NumberField sumField,qqField,postField;//输入电话号码
 	private JTextArea remarkArea;//输入备注信息的textarea
 	private String username,img="tx.jpg";
 	private UserFrame user;
 	private ImageIcon imgIco;
 	private JFileChooser filechooser;//文件选择器
+	private GridBagConstraints gbc;
+	private JDialog infoDialog;
 	private static final int size = 80;
 	
-	public AddContactPanel(String username,UserFrame user)
+	public AddContactPanel(String username,UserFrame user,String type)
 	{
 		this.username = username;
 		this.user = user;
-		init();
+		init(type);
 		initcombox();
 		initContactType();
 		initLisn();
 	}
 	
-	public void init()
+	public void init(String type)
 	{
-		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  新增联系人  ------"));
+		
 		GridBagLayout gbl=new GridBagLayout();
 		this.setLayout(gbl);
 		
@@ -82,7 +88,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		
 		imgIco = new ImageIcon("img/"+img);
 		imgIco.setImage(imgIco.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT));
-		JButton imgBtn=new JButton(imgIco);
+		imgBtn=new JButton(imgIco);
 		imgBtn.setMargin(new Insets(-2,-10,-2,-10));
 		imgBtn.addActionListener(new ActionListener()
 		{
@@ -99,7 +105,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		});
 		topRight.add(imgBtn);
 		
-		GridBagConstraints gbc=new GridBagConstraints();
+		gbc = new GridBagConstraints();
 		gbc.fill=GridBagConstraints.BOTH;	
 		
 		gbc.weightx=1;
@@ -224,6 +230,27 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		JScrollPane scrol=new JScrollPane(remarkArea);
 		this.add(scrol,gbc);
 		
+		if(type.equals(Constant.ADD))
+		{
+			setAddBtn();
+		}
+		else if(type.equals(Constant.INFO))
+		{
+			setInfoBtn();
+		}
+		else if(type.equals(Constant.DEL))
+		{
+			setDelBtn();
+		}
+		else if(type.equals(Constant.MOD))
+		{
+			setModBtn();
+		}
+	}
+	
+	private void setAddBtn()
+	{
+		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  新增联系人  ------"));
 		gbc.insets=new Insets(5,10,10,10);
 		gbc.weighty=0;
 		JPanel bottomPanel=new JPanel();
@@ -236,6 +263,129 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		handInBtn.setMargin(new Insets(0,20,0,20));
 		bottomPanel.add(clearBtn);
 		bottomPanel.add(handInBtn);
+
+		handInBtn.addActionListener(new AddItemLisn(this,username,user));//提交按钮
+		clearBtn.addActionListener(new ClearBtnLisn(this));//清除按钮
+	}
+	
+	private void setInfoBtn()
+	{
+		gbc.insets=new Insets(5,10,10,10);
+		gbc.weighty=0;
+		JPanel bottomPanel=new JPanel();
+		this.add(bottomPanel,gbc);
+		
+		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,5,5));
+		handInBtn=new JButton("确定");
+		handInBtn.setMargin(new Insets(0,20,0,20));
+		bottomPanel.add(handInBtn);
+
+		handInBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(infoDialog != null)
+				{
+					infoDialog.dispose();
+				}
+			}
+		});
+		
+		setEnable(false);
+	}
+	
+	private void setDelBtn()
+	{
+
+		gbc.insets=new Insets(5,10,10,10);
+		gbc.weighty=0;
+		JPanel bottomPanel=new JPanel();
+		this.add(bottomPanel,gbc);
+
+		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,5,5));
+		clearBtn=new JButton("取消");
+		handInBtn=new JButton("删除");
+		clearBtn.setMargin(new Insets(0,20,0,20));
+		handInBtn.setMargin(new Insets(0,20,0,20));
+		bottomPanel.add(clearBtn);
+		bottomPanel.add(handInBtn);
+
+		clearBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(infoDialog != null)
+				{
+					infoDialog.dispose();
+				}
+			}
+		});
+		
+		setEnable(false);
+	}
+	
+	private void setModBtn()
+	{
+		
+		gbc.insets=new Insets(5,10,10,10);
+		gbc.weighty=0;
+		JPanel bottomPanel=new JPanel();
+		this.add(bottomPanel,gbc);
+		
+		bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,5,5));
+		clearBtn=new JButton("取消");
+		handInBtn=new JButton("更新");
+		clearBtn.setMargin(new Insets(0,20,0,20));
+		handInBtn.setMargin(new Insets(0,20,0,20));
+		bottomPanel.add(clearBtn);
+		bottomPanel.add(handInBtn);
+		
+		clearBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(infoDialog != null)
+				{
+					infoDialog.dispose();
+				}
+			}
+		});
+		
+	}
+	
+	private void setEnable(boolean b)
+	{
+		genderBox.setEnabled(b);
+		typeBox.setEnabled(b);
+		dateField.setEditable(b);
+		contactNameField.setEditable(b);
+		addressField.setEditable(b);
+		emailField.setEditable(b);
+		imgBtn.setEnabled(b);
+		sumField.setEditable(b);
+		qqField.setEditable(b);
+		postField.setEditable(b);
+		remarkArea.setEditable(b);
+		unitField.setEditable(b);
+	}
+	
+	public void initData(ContactEntity contact)
+	{
+		genderBox.setSelectedItem(contact.getGender());
+		typeBox.setSelectedItem(contact.getType());
+		dateField.setText(contact.getBirthday());
+		contactNameField.setText(contact.getContactName());
+		addressField.setText(contact.getAddress());
+		emailField.setText(contact.getEmail());
+		sumField.setText(contact.getMoble());
+		qqField.setText(contact.getQq());
+		postField.setText(contact.getPost());
+		remarkArea.setText(contact.getRemarked());
+		unitField.setText(contact.getUnit());
+		setAvator(contact.getImg());
 	}
 	
 	/**
@@ -269,11 +419,21 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	private void initLisn()
 	{
 		dateBtn.addActionListener(new SelectDateListn(dateBtn,dateField));//选择日期按钮
-		handInBtn.addActionListener(new AddItemLisn(this,username,user));//提交按钮
-		clearBtn.addActionListener(new ClearBtnLisn(this));//清除按钮
-		
 		remarkArea.addMouseListener(new PopupMenuAction(remarkArea));//备注右键菜单
 		remarkArea.addFocusListener(new JTextComponentFocuseLisn(remarkArea,"100个字以内"));
+	}
+	
+	public void clear()
+	{
+		contactNameField.setText("");
+		sumField.setText("");
+		postField.setText("");
+		dateField.setText("1990-01-01");
+		qqField.setText("");
+		emailField.setText("");
+		unitField.setText("");
+		addressField.setText("");
+		remarkArea.setText("");
 	}
 	
 	public JTextField getContactName(){return contactNameField;}
@@ -285,5 +445,11 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	public JTextArea getRemarkArea(){return remarkArea;}
 	public UserFrame getUserFrame(){return this.user;}
 	public String getUserName(){return username;}
-	
+	public JTextField getQqField(){return qqField;}
+	public JTextField getEmailField(){return emailField;}
+	public JTextField getUnitField(){return unitField;}
+	public JTextField getPostField(){return postField;}
+	public String getImg(){return img;}
+	public void setInfoDiaog(JDialog dialog){this.infoDialog = dialog;}
+	public JButton getHandInBtn(){return this.handInBtn;}
 }

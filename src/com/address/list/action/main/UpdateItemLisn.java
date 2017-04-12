@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.main.ContactInforDialog;
 import com.address.list.frame.main.QueryContactPanel;
@@ -21,7 +22,7 @@ public class UpdateItemLisn implements ActionListener
 	private UserFrame user;
 	private QueryContactPanel panel;
 	private ContactInforDialog dialog;
-	private String date,address,gender,remarked,type,name;
+	private String date,address,gender,remarked,type,name,qq,email,post,unit,img;
 	private int row;
 	private String moble;
 	private Object itemid;
@@ -42,14 +43,11 @@ public class UpdateItemLisn implements ActionListener
 		}
 		if (row!=-1&&itemid!=null)
 		{
-			dialog=new ContactInforDialog(user,panel);
+			dialog=new ContactInforDialog(user,panel,Constant.MOD);
 			dialog.getDialog().setTitle("编辑联系人信息");
-						
-			//设置窗口控件可操作
-			dialog.setEnabled(true);
 			
 			//添加提交按钮监听器
-			dialog.getHandinBtn().addActionListener(new ActionListener(){
+			dialog.getAddPanel().getHandInBtn().addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
 					handin();
@@ -66,19 +64,18 @@ public class UpdateItemLisn implements ActionListener
 	private void handin()
 	{
 		//准备数据
-		date=dialog.getDateField().getText();
-		address=dialog.getAddressField().getText();
-		remarked=dialog.getRemarkArea().getText();
-		moble=dialog.getMobleField().getText();
-		if (dialog.getMaleBox().isSelected())
-		{
-			gender="男";
-		}else
-		{
-			gender="女";
-		}
-		type = (String)dialog.getTypeBox().getSelectedItem();
-		name = dialog.getItemField().getText();
+		date=dialog.getAddPanel().getDateField().getText();
+		address=dialog.getAddPanel().getAddressField().getText();
+		remarked=dialog.getAddPanel().getRemarkArea().getText();
+		moble=dialog.getAddPanel().getSumField().getText();
+		gender = (String)dialog.getAddPanel().getGenderBox().getSelectedItem();
+		type = (String)dialog.getAddPanel().getTypeBox().getSelectedItem();
+		name = dialog.getAddPanel().getContactName().getText();
+		qq = dialog.getAddPanel().getQqField().getText();
+		email = dialog.getAddPanel().getEmailField().getText();
+		post = dialog.getAddPanel().getPostField().getText();
+		unit = dialog.getAddPanel().getUnitField().getText();
+		img = dialog.getAddPanel().getImg();
 		//处理数据
 		if (moble.matches(" *"))
 		{
@@ -103,12 +100,16 @@ public class UpdateItemLisn implements ActionListener
 				address=address.substring(0, 20);
 			}
 			//执行数据库操作
-			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked, type, name))
+			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked, type, name, qq, email, post, unit, img))
 			{
 				//更新界面信息
 				panel.getTable().setValueAt(name, row, 1);
 				panel.getTable().setValueAt(moble, row, 2);
 				panel.getTable().setValueAt(type, row, 3);
+				panel.getTable().setValueAt(gender, row, 4);
+				panel.getTable().setValueAt(qq, row, 5);
+				panel.getTable().setValueAt(email, row, 6);
+				panel.getTable().setValueAt(unit, row, 7);
 				//隐藏dialog
 				dialog.getDialog().dispose();
 				
@@ -116,6 +117,11 @@ public class UpdateItemLisn implements ActionListener
 				new FlyDialog(user.getUserFrame(),"修改成功!");
 				
 				QueryContactPanel.isMove=true;//启动鼠标移动事件
+			}
+			else
+			{
+				//显示提示信息
+				new FlyDialog(user.getUserFrame(),"修改失败，请重试!");
 			}
 		}
 	}

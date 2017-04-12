@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ContactDao extends AbstractDao
 {
-	private static final String COLUMNS = " a.id,a.user_id,contactname,moble,gender,birthday,address,remarked,type_name ";
+	private static final String COLUMNS = " a.id,a.user_id,contactname,moble,gender,birthday,address,remarked,type_name,qq,email,post,unit,img ";
 	
 	private static ContactDao instance;
 	
@@ -80,7 +80,7 @@ public class ContactDao extends AbstractDao
 	 */
 	public Object[][] queryAll(String username)
 	{
-		String sql = "select a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id";
+		String sql = "select a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id";
 		return transList(query(sql, username));
 	}
 
@@ -115,12 +115,12 @@ public class ContactDao extends AbstractDao
 		String sql = null;
 		if(type.equals("全部"))
 		{
-			sql = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ?";
+			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ?";
 			return transList(query(sql, username, "%"+contact+"%"));
 		}
 		else
 		{
-			sql = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? and c.type_name=?";
+			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? and c.type_name=?";
 			return transList(query(sql, username, "%"+contact+"%", type));
 		}
 	}
@@ -136,7 +136,7 @@ public class ContactDao extends AbstractDao
 		{
 			return queryAll(username);
 		}
-		String sql  = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and c.type_name=?";
+		String sql  = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and c.type_name=?";
 		return transList(query(sql, username, type));
 	}
 	
@@ -150,10 +150,12 @@ public class ContactDao extends AbstractDao
 	 * @param remark
 	 * @return
 	 */
-	public boolean update(long id, String moble, String gender, String birthday, String address, String remark, String type, String name)
+	public boolean update(long id, String moble, String gender, String birthday, String address, String remark, String type, String name,
+											String qq, String email, String post, String unit, String img)
 	{
-		String sql ="update tbl_contact set contactname=?,moble=?,gender=?,birthday=?,address=?,remarked=?,contact_type=(select id from tbl_contact_type where type_name=?) where id=?";
-		return dml(sql, name, moble, gender, birthday, address, remark, type, id);
+		String sql ="update tbl_contact set contactname=?,moble=?,gender=?,birthday=?,address=?,remarked=?,contact_type=(select id from tbl_contact_type where type_name=?),"
+				+ "qq=?,email=?,post=?,unit=?,img=? where id=?";
+		return dml(sql, name, moble, gender, birthday, address, remark, type, qq, email, post, unit, img, id);
 	}
 	/**
 	 * 增加联系人分组
@@ -185,7 +187,7 @@ public class ContactDao extends AbstractDao
 	
 	private ContactEntity obj2Contact(Object[] obj)
 	{
-		//id,user_id,contactname,moble,gender,birthday,address,remarked
+		//id,user_id,contactname,moble,gender,birthday,address,remarked,qq,email,post,unit,img
 		ContactEntity contact = new ContactEntity();
 		contact.setId((long)obj[0]);
 		contact.setUserId((long)obj[1]);
@@ -196,6 +198,11 @@ public class ContactDao extends AbstractDao
 		contact.setAddress((String)obj[6]);
 		contact.setRemarked((String)obj[7]);
 		contact.setType((String)obj[8]);
+		contact.setQq((String)obj[9]);
+		contact.setEmail((String)obj[10]);
+		contact.setPost((String)obj[11]);
+		contact.setUnit((String)obj[12]);
+		contact.setImg((String)obj[13]);
 		return contact;
 	}
 }

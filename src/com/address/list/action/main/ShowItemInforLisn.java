@@ -3,6 +3,7 @@ package com.address.list.action.main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.address.list.frame.common.Constant;
 import com.address.list.frame.main.ContactInforDialog;
 import com.address.list.frame.main.QueryContactPanel;
 import com.address.list.frame.main.UserFrame;
@@ -32,14 +33,7 @@ public class ShowItemInforLisn implements ActionListener
 		}
 		if (row!=-1&&itemid!=null)
 		{
-			ContactInforDialog dialog=new ContactInforDialog(user,panel);
-						
-			dialog.getCancalBtn().setText("确定");
-			dialog.getHandinBtn().setVisible(false);
-			
-			//设置焦点按钮
-			dialog.getDialog().getRootPane().setDefaultButton(dialog.getCancalBtn());
-			
+			ContactInforDialog dialog=new ContactInforDialog(user,panel,Constant.INFO);
 			dialog.getDialog().setVisible(true);
 		}
 	}	
