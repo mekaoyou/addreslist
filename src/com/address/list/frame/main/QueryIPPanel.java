@@ -12,15 +12,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.address.list.frame.common.LimitTextField;
-import com.address.list.model.http.HttpRequest;
+import com.address.list.model.ip.QueryIPUtils;
 
 /**
- * 自定义组件，用户实现查询汉字拼音的功能
+ * 自定义组件，用户实现查询座机号码归属地的功能
  * @author Alex
  *
  */
 @SuppressWarnings("serial")
-public class QueryPYPanel extends JPanel
+public class QueryIPPanel extends JPanel
 {
 	private UserFrame user;//用户主界面
 	private String username;//用户名
@@ -28,11 +28,8 @@ public class QueryPYPanel extends JPanel
 	private LimitTextField queryField;
 	private JScrollPane scrol;//用于放置查询结果
 	
-	private static final String pyURL = "http://51pinyin.com/GetData.ashx?url=index";
-	
-	public QueryPYPanel(UserFrame user,String username)
+	public QueryIPPanel(UserFrame user,String username)
 	{
-		
 		this.user=user;
 		this.username = username;
 		init();
@@ -41,14 +38,14 @@ public class QueryPYPanel extends JPanel
 	public void init()
 	{
 		this.setLayout(new BorderLayout(5,10));
-		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  查询拼音  ------"));
+		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),"     ------  查询IP  ------"));
 		//顶部panel
 		JPanel topPanel=new JPanel();
 		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT,5,10));
 		
 		//顶部组件
-		queryField = new LimitTextField(100,"请输入要查询的汉字");
-		queryField.setColumns(45);
+		queryField = new LimitTextField(15);
+		queryField.setColumns(15);
 		selectButton=new JButton("查询");
 		
 		JTextArea result = new JTextArea();
@@ -64,8 +61,8 @@ public class QueryPYPanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				String code = queryField.getText();
-				String py = HttpRequest.sendPost(pyURL, "name="+code);
-				result.setText(py);
+				String iplocal = QueryIPUtils.getIPLocal(code);
+				result.setText(iplocal);
 			}
 		});
 				

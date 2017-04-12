@@ -32,33 +32,10 @@ public class SelectItemLisn implements ActionListener
 		{
 			return;
 		}
-		
-		Object[][] obj=null;
-		//执行查询
-		obj=ContactDao.getInstance().queryByContact(username, contact);
+		String type = (String)panel.getTypeBox().getSelectedItem();
+		Object[][] obj= ContactDao.getInstance().queryByContact(username, contact, type);
 		//处理结果
-		if (obj==null)
-		{
-			obj=new Object[1][4];
-		}
-		
-		Object[] columTitle={"ID","联系人","电话","分组"};
-		//刷新表格，显示查询结果
-		if (panel.getScrol()!=null)
-		{
-			panel.remove(panel.getTable());
-		}
-		JTable table=new JTable(obj,columTitle);
-		table.setBackground(new Color(214,217,223));
-		panel.setTable(table);
-		panel.getScrol().setViewportView(panel.getTable());
-		panel.add(panel.getScrol());
-		
-		//给table安装鼠标事件
-		table.addMouseListener(new SelectMouseLisn(panel));
-		table.addMouseMotionListener(new SelectMouseLisn(panel));
-		
-		QueryContactPanel.isMove=true;//启动鼠标移动事件
+		panel.initTabel(obj);
 	}
 
 }

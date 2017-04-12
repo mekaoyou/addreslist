@@ -77,10 +77,34 @@ public class ContactDao extends AbstractDao
 	 * @param username
 	 * @param contact
 	 */
-	public Object[][] queryByContact(String username, String contact)
+	public Object[][] queryByContact(String username, String contact, String type)
 	{
-		String sql = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ?";
-		return transList(query(sql, username, "%"+contact+"%"));
+		String sql = null;
+		if(type.equals("全部"))
+		{
+			sql = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ?";
+			return transList(query(sql, username, "%"+contact+"%"));
+		}
+		else
+		{
+			sql = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? and c.type_name=?";
+			return transList(query(sql, username, "%"+contact+"%", type));
+		}
+	}
+	/**
+	 * 根据类型查询客户名下联系人
+	 * @param username
+	 * @param type
+	 * @return
+	 */
+	public Object[][] queryByType(String username, String type)
+	{
+		if(type.equals("全部"))
+		{
+			return queryAll(username);
+		}
+		String sql  = "select  a.id,a.contactname,a.moble,c.type_name from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and c.type_name=?";
+		return transList(query(sql, username, type));
 	}
 	
 	/**

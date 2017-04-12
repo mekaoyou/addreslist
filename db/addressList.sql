@@ -24,6 +24,11 @@ CREATE TABLE IF NOT EXISTS `tbl_contact`(
   	`gender` varchar(6) NULL DEFAULT NULL COMMENT '性别',
   	`birthday` DATE NULL DEFAULT NULL COMMENT '生日',
   	`address` varchar(128) NULL DEFAULT NULL COMMENT '地址',
+  	`qq` varchar(15) NULL DEFAULT NULL COMMENT 'QQ',
+  	`email` varchar(32) NULL DEFAULT NULL COMMENT 'EMAIL',
+  	`unit` varchar(32) NULL DEFAULT NULL COMMENT '单位',
+  	`post` varchar(6) NULL DEFAULT NULL COMMENT '邮编',
+  	`img` varchar(128) NULL DEFAULT NULL COMMENT '头像',
   	`remarked` varchar(128) NULL DEFAULT NULL COMMENT '备注',
 	primary key(id)  
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='联系人表';

@@ -25,6 +25,7 @@ import com.address.list.action.QuitLisn;
 import com.address.list.action.main.AboutLisn;
 import com.address.list.action.main.AddItemAction;
 import com.address.list.action.main.ApplicationAction;
+import com.address.list.action.main.SelectIPAction;
 import com.address.list.action.main.SelectItemAction;
 import com.address.list.action.main.SelectKDAction;
 import com.address.list.action.main.SelectMobleAction;
@@ -55,6 +56,7 @@ public class UserFrame
 	private QueryTelPanel selectTelPanel;//查询座机号Panel
 	private QueryKDPanel selectKDPanel;//查询快递信息Panel
 	private QueryPYPanel selectPYPanel;//查询汉字拼音Panel
+	private QueryIPPanel selectIPPanel;//查询汉字拼音Panel
 	private UserinforsysPanel userPanel;//管理用户账户Panel
 	private DateAndTime dateandtime;//时间状态栏
 	
@@ -136,6 +138,7 @@ public class UserFrame
 		SelectTelAction telAction = new SelectTelAction(this);
 		SelectKDAction kdAction = new SelectKDAction(this);
 		SelectPYAction pyAction = new SelectPYAction(this);
+		SelectIPAction ipAction = new SelectIPAction(this);
 		
 		//创建菜单项
 		JMenuItem exitItem = new JMenuItem("退出(Q)");
@@ -173,6 +176,7 @@ public class UserFrame
 		toolbar.add(postAction);
 		toolbar.add(mobleAction);
 		toolbar.add(telAction);
+		toolbar.add(ipAction);
 		toolbar.add(pyAction);
 		
 		//添加菜单条和工具条
@@ -186,6 +190,10 @@ public class UserFrame
 		userFrame.add(topPanel,BorderLayout.NORTH);		
 		
 		//数据显示区
+		selectIPPanel = new QueryIPPanel(this, username);
+		userFrame.add(selectIPPanel);
+		selectIPPanel.setVisible(false);
+
 		selectPYPanel = new QueryPYPanel(this, username);
 		userFrame.add(selectPYPanel);
 		selectPYPanel.setVisible(false);
@@ -284,6 +292,7 @@ public class UserFrame
 					&&!selectTelPanel.isVisible()
 					&&!selectKDPanel.isVisible()
 					&&!selectPYPanel.isVisible()
+					&&!selectIPPanel.isVisible()
 					&&!selectMoblePanel.isVisible())
 			{
 				toolbar2.setVisible(b);
@@ -329,6 +338,10 @@ public class UserFrame
 				{
 					selectPYPanel.setVisible(b);					
 				}
+				if (selectIPPanel.isVisible())
+				{
+					selectIPPanel.setVisible(b);					
+				}
 				userFrame.add(userPanel);
 				toolbar2.setVisible(!b);
 				userPanel.setVisible(!b);
@@ -350,6 +363,7 @@ public class UserFrame
 		selectTelPanel.setVisible(b);
 		selectKDPanel.setVisible(b);
 		selectPYPanel.setVisible(b);
+		selectIPPanel.setVisible(b);
 		
 		panel.setVisible(!b);
 	}
@@ -373,4 +387,6 @@ public class UserFrame
 	public void setQueryKDPanel(QueryKDPanel selectKDPanel){this.selectKDPanel=selectKDPanel;}
 	public QueryPYPanel getQueryPYPanel(){return selectPYPanel;}
 	public void setQueryPYPanel(QueryPYPanel selectPYPanel){this.selectPYPanel=selectPYPanel;}
+	public QueryIPPanel getQueryIPPanel(){return selectIPPanel;}
+	public void setQueryIPPanel(QueryIPPanel selectIPPanel){this.selectIPPanel=selectIPPanel;}
 }

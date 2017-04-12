@@ -16,8 +16,6 @@ import javax.swing.JTextArea;
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.common.NumberField;
 import com.address.list.model.KdDao;
-import com.address.list.model.access.MobileDao;
-import com.address.list.model.access.MobileEntity;
 import com.address.list.model.kd.KdniaoTrackQueryAPI;
 
 /**

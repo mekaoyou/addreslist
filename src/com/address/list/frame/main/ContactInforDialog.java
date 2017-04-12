@@ -8,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.ButtonGroup;

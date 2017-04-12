@@ -9,6 +9,8 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 public class HttpRequest {
     /**
      * 向指定URL发送GET方法的请求
@@ -103,8 +105,9 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
-            e.printStackTrace();
+        	JOptionPane.showMessageDialog(null, "发送 POST 请求出现异常！");
+            //System.out.println("发送 POST 请求出现异常！"+e);
+            //e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
         finally{

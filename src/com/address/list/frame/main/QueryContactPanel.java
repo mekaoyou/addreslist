@@ -2,12 +2,15 @@ package com.address.list.frame.main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -38,6 +41,9 @@ public class QueryContactPanel extends JPanel
 	private JButton selectButton,itemInforBtn,updateBtn,delBtn;//搜索，显示详情，编辑项目，删除项目按钮
 	private JPopupMenu pop;
 	private LimitTextField queryField;
+	private JComboBox typeBox;//选择分组
+	
+	private static final Object[] columnTitle={"ID","联系人","电话","分组"};
 	
 	public static boolean isMove=true;//是否启动表格的鼠标移动事件
 	
@@ -46,9 +52,10 @@ public class QueryContactPanel extends JPanel
 		this.user=user;
 		this.username = username;
 		init();
-		initTabel();
+		initTabel(ContactDao.getInstance().queryAll(username));
 		initBottomBtn();	
 		initpopMenu();
+		initTypes();
 	}
 
 	public void init()
@@ -60,6 +67,18 @@ public class QueryContactPanel extends JPanel
 		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT,5,10));
 		
 		//顶部组件
+		typeBox = new JComboBox<>();
+		typeBox.addItem("全部");
+		typeBox.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				String selectType = (String)typeBox.getSelectedItem();
+				initTabel(ContactDao.getInstance().queryByType(username, selectType));
+			}
+		});
+		
 		queryField = new LimitTextField(20);
 		queryField.setColumns(20);
 		selectButton=new JButton("查询");
@@ -67,29 +86,51 @@ public class QueryContactPanel extends JPanel
 	    //为按钮添加监听器
 		selectButton.addActionListener(new SelectItemLisn(username,this));
 				
+		topPanel.add(typeBox);
 		topPanel.add(queryField);
 		topPanel.add(selectButton);
 		
 		this.add(topPanel,BorderLayout.NORTH);
+		
+		scrol=new JScrollPane();
+		this.add(scrol,BorderLayout.CENTER);
+	}
+	
+	private void initTypes()
+	{
+		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		for (Object[] obj : typs)
+		{
+			typeBox.addItem(obj[0]);
+		}
 	}
 	
 	/**
 	 * 添加表格
 	 */
-	public void initTabel()
+	public void initTabel(Object[][] obj)
 	{
-		Object[][] obj=ContactDao.getInstance().queryAll(username);
+		//Object[][] obj=ContactDao.getInstance().queryAll(username);
 		if (obj==null)
 		{
 			obj=new Object[1][4];
 		}
-		Object[] columnTitle={"ID","联系人","电话","分组"};
+		if(table != null)
+		{
+			table = null;
+		}
 		table=new JTable(obj,columnTitle);
+		table.setBackground(new Color(214,217,223));
 		table.getTableHeader().setReorderingAllowed(false);//设置表格列不能拖动
 		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//设置一次只能选中一行
-		table.setBackground(new Color(214,217,223));
-		scrol=new JScrollPane(table);
-		this.add(scrol,BorderLayout.CENTER);
+
+		//给table安装鼠标事件
+		table.addMouseListener(new SelectMouseLisn(this));
+		table.addMouseMotionListener(new SelectMouseLisn(this));
+		
+		scrol.setViewportView(table);
+
+		QueryContactPanel.isMove=true;//启动鼠标移动事件
 	}
 	
 	/**
@@ -142,4 +183,5 @@ public class QueryContactPanel extends JPanel
 	public String getUsername(){return username;}
 	public JPopupMenu getPop(){return pop;}
 	public LimitTextField getQueryField(){return queryField;}
+	public JComboBox getTypeBox(){return typeBox;}
 }
