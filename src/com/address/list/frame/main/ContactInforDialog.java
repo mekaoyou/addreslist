@@ -223,7 +223,7 @@ public class ContactInforDialog implements UserEditPanel
 	public void initContactType()
 	{
 		typeBox.removeAllItems();
-		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		List<Object[]> typs = ContactDao.getInstance().queryAllType(panel.getUsername());
 		for (Object[] obj : typs)
 		{
 			typeBox.addItem(obj[0]);
@@ -260,4 +260,5 @@ public class ContactInforDialog implements UserEditPanel
 	public JButton getCancalBtn(){return cancalBtn;}
 	public JButton getHandinBtn(){return handinBtn;}	
 	public JComboBox getTypeBox(){return typeBox;}
+	public String getUserName(){return panel.getUsername();}
 }

@@ -1,15 +1,21 @@
 package com.address.list.frame.main;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +30,7 @@ import com.address.list.action.main.ClearBtnLisn;
 import com.address.list.action.main.SelectDateListn;
 import com.address.list.frame.common.LimitTextField;
 import com.address.list.frame.common.NumberField;
+import com.address.list.frame.main.filter.ImageFilter;
 import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 
@@ -38,13 +45,15 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 {
 	private JComboBox genderBox, typeBox;//选择项目类型，收入或支出的下拉列表
 	private JTextField dateField;//输入日期
-	private LimitTextField contactNameField,addressField;//描述信息，长度限制为20
+	private LimitTextField contactNameField,addressField,emailField,unitField;//描述信息，长度限制为20
 	private JButton dateBtn,handInBtn,clearBtn;//选择日期的按钮,提交按钮,清空按钮
-	private NumberField sumField;//输入电话号码
+	private NumberField sumField,qqField,postField;//输入电话号码
 	private JTextArea remarkArea;//输入备注信息的textarea
-	
-	private String username;
+	private String username,img="tx.jpg";
 	private UserFrame user;
+	private ImageIcon imgIco;
+	private JFileChooser filechooser;//文件选择器
+	private static final int size = 80;
 	
 	public AddContactPanel(String username,UserFrame user)
 	{
@@ -62,22 +71,54 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		GridBagLayout gbl=new GridBagLayout();
 		this.setLayout(gbl);
 		
+		JPanel topPanel = new JPanel();
+		JPanel topLeft = new JPanel();
+		JPanel topRight = new JPanel();
+		topPanel.setLayout(new BorderLayout());
+		topLeft.setLayout(gbl);
+		topRight.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20));
+		topPanel.add(topLeft, BorderLayout.CENTER);
+		topPanel.add(topRight, BorderLayout.EAST);
+		
+		imgIco = new ImageIcon("img/"+img);
+		imgIco.setImage(imgIco.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT));
+		JButton imgBtn=new JButton(imgIco);
+		imgBtn.setMargin(new Insets(-2,-10,-2,-10));
+		imgBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(filechooser == null)
+				{
+					filechooser = new JFileChooser();
+					filechooser.setFileFilter(new ImageFilter());
+				}
+				filechooser.showOpenDialog(user.getUserFrame());
+			}
+		});
+		topRight.add(imgBtn);
+		
 		GridBagConstraints gbc=new GridBagConstraints();
 		gbc.fill=GridBagConstraints.BOTH;	
 		
 		gbc.weightx=1;
-		gbc.insets=new Insets(0,10,0,10);		
+		gbc.insets=new Insets(0,0,0,0);		
 		gbc.gridwidth=GridBagConstraints.REMAINDER;
 		
+		this.add(topPanel, gbc);
+		
+		gbc.insets=new Insets(0,10,0,10);	
+		
 		JPanel itemPanel=new JPanel();
-		this.add(itemPanel,gbc);
+		topLeft.add(itemPanel,gbc);
 		itemPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		JLabel itemLabel=new JLabel("姓名:*");
 		itemPanel.add(itemLabel);		
 		
 		contactNameField=new LimitTextField(12, "请输入联系人");
-		contactNameField.setColumns(12);
+		contactNameField.setColumns(14);
 		itemPanel.add(contactNameField);		
 		
 		JLabel genderLabel=new JLabel("性别:");
@@ -87,31 +128,38 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		itemPanel.add(genderBox);		
 		
 		JPanel sumPanel=new JPanel();
-		this.add(sumPanel,gbc);
+		topLeft.add(sumPanel,gbc);
 		sumPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		JLabel sumLabel=new JLabel("电话:*");
 		sumPanel.add(sumLabel);		
 		
 		sumField=new NumberField();
-		sumField.setColumns(11);
+		sumField.setColumns(14);
 		sumPanel.add(sumField);			
-
-		JLabel typeLable=new JLabel("分组:*");
-		sumPanel.add(typeLable);		
 		
-		typeBox=new JComboBox();
-		sumPanel.add(typeBox);
+		JLabel emLabel=new JLabel("邮箱:");
+		sumPanel.add(emLabel);		
 		
-		JButton plusBtn = new JButton("+");
-		sumPanel.add(plusBtn);		
-		plusBtn.addActionListener(new AddContactTypeLisn(this.user.getUserFrame(), this));
+		emailField=new LimitTextField(30);
+		emailField.setColumns(14);
+		sumPanel.add(emailField);			
 		
 		JPanel datePanel=new JPanel();
-		this.add(datePanel,gbc);
+		topLeft.add(datePanel,gbc);
 		datePanel.setLayout(new FlowLayout(FlowLayout.LEFT));		
+
+		JLabel typeLable=new JLabel("分组:*");
+		datePanel.add(typeLable);		
 		
-		JLabel dateLable=new JLabel("生日:  ");
+		typeBox=new JComboBox();
+		datePanel.add(typeBox);
+		
+		JButton plusBtn = new JButton("+");
+		datePanel.add(plusBtn);		
+		plusBtn.addActionListener(new AddContactTypeLisn(this.user.getUserFrame(), this));
+		
+		JLabel dateLable=new JLabel("                       生日:");
 		datePanel.add(dateLable);				
 		
 		dateField=new JTextField("1990-01-01");
@@ -121,7 +169,35 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		dateBtn=new JButton("↓");
 		dateBtn.setMargin(new Insets(0,-12,0,-12));
 		datePanel.add(dateBtn);		
-			
+		
+		JPanel qpPanel = new JPanel();
+		topLeft.add(qpPanel, gbc);
+		qpPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel qqLable=new JLabel("QQ:    ");
+		qpPanel.add(qqLable);		
+
+		qqField=new NumberField();
+		qqField.setColumns(14);
+		qpPanel.add(qqField);	
+		
+		JLabel postLable=new JLabel("邮编:");
+		qpPanel.add(postLable);		
+		
+		postField=new NumberField();
+		postField.setColumns(14);
+		qpPanel.add(postField);	
+		
+		JPanel unitPanel = new JPanel();
+		this.add(unitPanel, gbc);
+		unitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel unitLable=new JLabel("单位:  ");
+		unitPanel.add(unitLable);		
+
+		unitField=new LimitTextField(14);
+		unitField.setColumns(45);
+		unitPanel.add(unitField);	
 		
 		gbc.gridwidth=GridBagConstraints.REMAINDER;
 		JPanel desPanel=new JPanel();
@@ -132,7 +208,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		desPanel.add(desLabel);
 		
 		addressField=new LimitTextField(30,"请输入地址");
-		addressField.setColumns(30);
+		addressField.setColumns(45);
 		desPanel.add(addressField);
 		
 		JPanel p=new JPanel();
@@ -148,7 +224,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		JScrollPane scrol=new JScrollPane(remarkArea);
 		this.add(scrol,gbc);
 		
-		gbc.insets=new Insets(5,10,20,10);
+		gbc.insets=new Insets(5,10,10,10);
 		gbc.weighty=0;
 		JPanel bottomPanel=new JPanel();
 		this.add(bottomPanel,gbc);
@@ -174,11 +250,17 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	public void initContactType()
 	{
 		typeBox.removeAllItems();
-		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		List<Object[]> typs = ContactDao.getInstance().queryAllType(username);
 		for (Object[] obj : typs)
 		{
 			typeBox.addItem(obj[0]);
 		}
+	}
+	
+	public void setAvator(String img)
+	{
+		ImageIcon temp = new ImageIcon("img/"+img);
+		this.imgIco.setImage(temp.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT));
 	}
 	
 	/**
@@ -202,5 +284,6 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	public NumberField getSumField(){return sumField;}
 	public JTextArea getRemarkArea(){return remarkArea;}
 	public UserFrame getUserFrame(){return this.user;}
+	public String getUserName(){return username;}
 	
 }

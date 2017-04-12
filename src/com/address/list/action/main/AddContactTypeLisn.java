@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.common.LimitTextField;
-import com.address.list.frame.main.AddContactPanel;
 import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 
@@ -56,10 +55,14 @@ public class AddContactTypeLisn implements ActionListener
 					new FlyDialog(parentFrame, "联系人分组名不能为空!");
 					return;
 				}
-				if(ContactDao.getInstance().addContactType(name))
+				if(ContactDao.getInstance().addContactType(editPanel.getUserName(), name))
 				{
 					editPanel.initContactType();
 					addDialog.dispose();
+				}
+				else
+				{
+					new FlyDialog(parentFrame, "添加失败，分组名重复!");
 				}
 			}
 		});

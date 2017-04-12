@@ -3,6 +3,8 @@ package com.address.list.action.main;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.address.list.frame.common.FlyDialog;
 import com.address.list.frame.main.AddContactPanel;
 import com.address.list.frame.main.UserFrame;
@@ -18,7 +20,7 @@ public class AddItemLisn implements ActionListener
 	private AddContactPanel addPanel;
 	private String username;
 	private UserFrame user;
-	private String contactName,date,address,gender,remarked, moble, type;
+	private String contactName,date,address,gender,remarked, moble, type,qq,email,unit,post,img;
 	
 	public AddItemLisn(AddContactPanel addPanel,String username,UserFrame user)
 	{
@@ -43,6 +45,11 @@ public class AddItemLisn implements ActionListener
 		{
 			new FlyDialog(user.getUserFrame(),"请填写正确完整信息!");
 		}
+		else if(StringUtils.isEmpty(type))
+		{
+			new FlyDialog(user.getUserFrame(),"请添加联系人分组!");
+			return;
+		}
 		else
 		{			
 			if (remarked==null||remarked.equals("100个字以内"))
@@ -57,16 +64,16 @@ public class AddItemLisn implements ActionListener
 			{
 				address=address.substring(0, 20);
 			}
-			if (ContactDao.getInstance().addContact(username, contactName, moble, date, address, gender, remarked, type))
-			{
-				//添加提示信息
-				new FlyDialog(user.getUserFrame(),"添加成功!");
-				
-				addPanel.getDateField().setText("1990-01-01");
-				addPanel.getAddressField().setText("");
-				addPanel.getRemarkArea().setText("");
-				addPanel.getSumField().setText("");				
-			}
+//			if (ContactDao.getInstance().addContact(username, contactName, moble, date, address, gender, remarked, type))
+//			{
+//				//添加提示信息
+//				new FlyDialog(user.getUserFrame(),"添加成功!");
+//				
+//				addPanel.getDateField().setText("1990-01-01");
+//				addPanel.getAddressField().setText("");
+//				addPanel.getRemarkArea().setText("");
+//				addPanel.getSumField().setText("");				
+//			}
 		}
 	}
 }

@@ -98,7 +98,7 @@ public class QueryContactPanel extends JPanel
 	
 	private void initTypes()
 	{
-		List<Object[]> typs = ContactDao.getInstance().queryAllType();
+		List<Object[]> typs = ContactDao.getInstance().queryAllType(username);
 		for (Object[] obj : typs)
 		{
 			typeBox.addItem(obj[0]);

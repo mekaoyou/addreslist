@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `tbl_contact`(
 DROP TABLE IF EXISTS `tbl_contact_type`;
 CREATE TABLE IF NOT EXISTS `tbl_contact_type`(
 	`id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` int(6) unsigned NOT NULL,
 	`type_name` varchar(32) NOT NULL,
 	primary key(id)  
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='联系人分类';

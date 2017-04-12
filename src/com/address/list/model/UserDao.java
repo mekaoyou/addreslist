@@ -86,7 +86,11 @@ public class UserDao extends AbstractDao
 	 */
 	public boolean updateUser(Object[] values)
 	{
-		String sql="update tbl_user set password=?,pwquestion=?,pwanswer=?,remarked=? where username=?";
+		if(!values[0].equals(values[values.length-1]) && addUserCheck((String)values[0]))
+		{
+			return false;
+		}
+		String sql="update tbl_user set username=?,password=?,pwquestion=?,pwanswer=?,remarked=? where username=?";
 		return dml(sql, values);
 	}
 	

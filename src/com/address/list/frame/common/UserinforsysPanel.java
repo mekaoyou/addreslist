@@ -115,7 +115,7 @@ public class UserinforsysPanel extends JPanel
 		JScrollPane scrol=new JScrollPane(remarkArea);		
 		
 		//设置控件相关属性
-		nameField.setEditable(false);
+		//nameField.setEditable(false);
 		nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		checknameLabel.setForeground(fontColor);
 		checkonePwLabel.setForeground(fontColor);
@@ -506,7 +506,7 @@ public class UserinforsysPanel extends JPanel
 		nameLabel.setText("用户名:");
 		nameField.setText(username);
 		checknameLabel.setText("");
-		nameField.setEditable(false);
+		//nameField.setEditable(false);
 		onePwLabel.setText("输入新密码:");
 		twoPwLabel.setText("再次输入新密码:");
 		clearBtn(UPDATE);
@@ -519,6 +519,7 @@ public class UserinforsysPanel extends JPanel
 	 */
 	private Object[] updateData()
 	{
+		String name = nameField.getText();
 		String password=charTOstring(onePwField.getPassword());
 		Object pwQuestion=pwQuestionBox.getSelectedItem();
 		String pwAnswer=pwAnswerField.getText();
@@ -527,7 +528,7 @@ public class UserinforsysPanel extends JPanel
 		{
 			remarked=remarked.substring(0, 100);
 		}
-		Object[] obj={password,pwQuestion,pwAnswer,remarked,username};
+		Object[] obj={name,password,pwQuestion,pwAnswer,remarked,username};
 		return obj;
 	}
 	/**
@@ -581,6 +582,11 @@ public class UserinforsysPanel extends JPanel
 						if (UserDao.getInstance().updateUser(updateData()))
 						{
 							new FlyDialog(user,"修改成功!");
+							user.setTitle(nameField.getText() + " - 通讯录");
+						}
+						else
+						{
+							new FlyDialog(user,"修改失败，用户名重复！");
 						}
 					}
 					else

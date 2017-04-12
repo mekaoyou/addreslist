@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ContactDao extends AbstractDao
 {
-	private static final String COLUMNS = " a.id,user_id,contactname,moble,gender,birthday,address,remarked,type_name ";
+	private static final String COLUMNS = " a.id,a.user_id,contactname,moble,gender,birthday,address,remarked,type_name ";
 	
 	private static ContactDao instance;
 	
@@ -35,10 +35,43 @@ public class ContactDao extends AbstractDao
 	 * @param remarked
 	 * @return
 	 */
-	public boolean addContact(String username, String contactName, String moble, String birthday, String address, String gender, String remarked, String type)
+	public boolean addContact(String username, String contactName, String moble, 
+			String birthday, String address, String gender, String remarked, String type,
+			String qq, String email, String unit, String post, String img)
 	{
-		String sql = "insert into tbl_contact (user_id, contactname, moble, gender, birthday, address, remarked, contact_type) values ((select id from tbl_user where username=?),?,?,?,?,?,?,(select id from tbl_contact_type where type_name=?))";
-		return dml(sql, username, contactName, moble, gender, birthday, address, remarked, type);
+		String sql = "insert into tbl_contact "
+				+ "("
+				+ "user_id, "
+				+ "contactname, "
+				+ "moble, "
+				+ "gender, "
+				+ "birthday, "
+				+ "address, "
+				+ "remarked, "
+				+ "qq, "
+				+ "email, "
+				+ "unit, "
+				+ "post, "
+				+ "img, "
+				+ "contact_type"
+				+ ") values (("
+				+ "select id from tbl_user where username=?),"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "?,"
+				+ "(select a.id from tbl_contact_type a,tbl_user b where a.user_id=b.id and b.username=? and type_name=?))";
+		return dml(sql, username, contactName, moble, gender, 
+				birthday, address, remarked, 
+				qq, email, unit, post, img, 
+				username, type);
 	}
 	/**
 	 * 查询用户名下的所有联系人
@@ -127,16 +160,27 @@ public class ContactDao extends AbstractDao
 	 * @param name
 	 * @return
 	 */
-	public boolean addContactType(String name)
+	public boolean addContactType(String username, String type)
 	{
-		String sql = "insert into tbl_contact_type (type_name) values (?)";
-		return dml(sql, name);
+		//check
+		String sql = "select * from tbl_user a, tbl_contact_type b where a.id=b.user_id and a.username=? and b.type_name=?";
+		if(query(sql, username, type).size() > 0)
+		{
+			return false;
+		}
+		sql = "insert into tbl_contact_type (user_id,type_name) values ((select id from tbl_user where username=?),?)";
+		return dml(sql, username, type);
 	}
 	
-	public List<Object[]> queryAllType()
+	/**
+	 * 插叙联系人所有分组
+	 * @param username
+	 * @return
+	 */
+	public List<Object[]> queryAllType(String username)
 	{
-		String sql = "select type_name from tbl_contact_type";
-		return query(sql);
+		String sql = "select type_name from tbl_contact_type a, tbl_user b where a.user_id=b.id and b.username=?";
+		return query(sql, username);
 	}
 	
 	private ContactEntity obj2Contact(Object[] obj)
