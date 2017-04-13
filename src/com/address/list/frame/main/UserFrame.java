@@ -25,6 +25,7 @@ import com.address.list.action.QuitLisn;
 import com.address.list.action.main.AboutLisn;
 import com.address.list.action.main.AddItemAction;
 import com.address.list.action.main.ApplicationAction;
+import com.address.list.action.main.LogoutBtnLisn;
 import com.address.list.action.main.SelectIPAction;
 import com.address.list.action.main.SelectItemAction;
 import com.address.list.action.main.SelectKDAction;
@@ -37,6 +38,7 @@ import com.address.list.action.main.UpdateUserInforsysAction;
 import com.address.list.frame.common.Constant;
 import com.address.list.frame.common.DateAndTime;
 import com.address.list.frame.common.UserinforsysPanel;
+import com.address.list.frame.login.LoginBox;
 import com.address.list.model.access.AccessC3p0DBUtil;
 
 /**
@@ -60,11 +62,12 @@ public class UserFrame
 	private QueryIPPanel selectIPPanel;//查询汉字拼音Panel
 	private UserinforsysPanel userPanel;//管理用户账户Panel
 	private DateAndTime dateandtime;//时间状态栏
+	private LoginBox loginBox;
 	
-	
-	public UserFrame(String username)
+	public UserFrame(String username, LoginBox loginBox)
 	{
 		this.username = username;
+		this.loginBox = loginBox;
 		init();
 		inituserAdmin();
 
@@ -142,15 +145,19 @@ public class UserFrame
 		SelectIPAction ipAction = new SelectIPAction(this);
 		
 		//创建菜单项
+		JMenuItem logoutItem = new JMenuItem("注销(O)");
 		JMenuItem exitItem = new JMenuItem("退出(Q)");
 		JMenuItem itemItem=new JMenuItem("管理联系人(I)");
 		JMenuItem userItem=new JMenuItem("管理账户信息(U)");
+		JMenuItem delUser = new JMenuItem("删除当前用户(D)");
 		JMenuItem helpItem = new JMenuItem("帮助(H)");
 		JMenuItem aboutItem = new JMenuItem("关于(A)");
+		logoutItem.setMnemonic(KeyEvent.VK_O);
 		exitItem.setMnemonic(KeyEvent.VK_Q);
 		exitItem.setAccelerator(KeyStroke.getKeyStroke('Q',InputEvent.CTRL_DOWN_MASK));
 		itemItem.setMnemonic(KeyEvent.VK_I);
 		userItem.setMnemonic(KeyEvent.VK_U);
+		delUser.setMnemonic(KeyEvent.VK_D);
 		helpItem.setMnemonic(KeyEvent.VK_H);
 		aboutItem.setMnemonic(KeyEvent.VK_A);
 		
@@ -158,9 +165,12 @@ public class UserFrame
 		dateandtime=new DateAndTime();
 		
 		//添加菜单项
+		sysmenu.add(logoutItem);
 		sysmenu.add(exitItem);
 		runmenu.add(itemItem);
 		runmenu.add(userItem);
+		runmenu.addSeparator();
+		runmenu.add(delUser);
 		aboutmenu.add(helpItem);
 		aboutmenu.add(aboutItem);
 		
@@ -241,7 +251,9 @@ public class UserFrame
 		//添加菜单项监听器
 		itemItem.addActionListener(new TopPanelBtnLisn(this,itemBtn));//显示联系人管理页面
 		userItem.addActionListener(new TopPanelBtnLisn(this,userBtn));//显示账号管理页面
+		delUser.addActionListener(new LogoutBtnLisn(this, Constant.DEL_OUT));
 		
+		logoutItem.addActionListener(new LogoutBtnLisn(this, Constant.LOG_OUT));
 		exitItem.addActionListener(new QuitLisn(userFrame));//退出监听器
 		
 		aboutItem.addActionListener(new AboutLisn(userFrame));//关于
@@ -390,4 +402,5 @@ public class UserFrame
 	public void setQueryPYPanel(QueryPYPanel selectPYPanel){this.selectPYPanel=selectPYPanel;}
 	public QueryIPPanel getQueryIPPanel(){return selectIPPanel;}
 	public void setQueryIPPanel(QueryIPPanel selectIPPanel){this.selectIPPanel=selectIPPanel;}
+	public LoginBox getLoginBox(){return this.loginBox;}
 }

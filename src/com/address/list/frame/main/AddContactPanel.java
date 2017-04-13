@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,6 +38,7 @@ import com.address.list.frame.main.filter.ImageFilter;
 import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 import com.address.list.model.ContactEntity;
+import com.address.list.utils.FileUtils;
 
 
 /**
@@ -59,6 +61,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	private JFileChooser filechooser;//文件选择器
 	private GridBagConstraints gbc;
 	private JDialog infoDialog;
+	private boolean edit_able=true;
 	private static final int size = 80;
 	
 	public AddContactPanel(String username,UserFrame user,String type)
@@ -95,12 +98,20 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
+				if(!edit_able)
+					return;
 				if(filechooser == null)
 				{
 					filechooser = new JFileChooser();
 					filechooser.setFileFilter(new ImageFilter());
 				}
-				filechooser.showOpenDialog(user.getUserFrame());
+				int option = filechooser.showOpenDialog(user.getUserFrame());
+				if(option == JFileChooser.APPROVE_OPTION)
+				{
+					File file = filechooser.getSelectedFile();
+					img = FileUtils.fileChannelCopy(file);
+					setAvator(img);
+				}
 			}
 		});
 		topRight.add(imgBtn);
@@ -364,12 +375,12 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		contactNameField.setEditable(b);
 		addressField.setEditable(b);
 		emailField.setEditable(b);
-		imgBtn.setEnabled(b);
 		sumField.setEditable(b);
 		qqField.setEditable(b);
 		postField.setEditable(b);
 		remarkArea.setEditable(b);
 		unitField.setEditable(b);
+		edit_able = b;
 	}
 	
 	public void initData(ContactEntity contact)

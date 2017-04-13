@@ -103,7 +103,12 @@ public class UserDao extends AbstractDao
 	public boolean appUser(Object[] values)
 	{
 		String sql="insert into tbl_user (username,password,pwquestion,pwanswer,remarked) values (?,?,?,?,?)";
-		return dml(sql, values);
+		if( dml(sql, values))
+		{
+			sql = "insert into tbl_contact_type (user_id,type_name) values ((select t.id from tbl_user t where t.username=?),?)";
+			return dml(sql, values[0],"家人");
+		}
+		return false;
 	}
 	
 	/**
@@ -127,5 +132,28 @@ public class UserDao extends AbstractDao
 	{
 		String sql = "select t.username,t.password,t.default_login from tbl_user t where t.default_login != '0' limit 0,1";
 		return queryUniqueResult(sql);
+	}
+	
+	/**
+	 * 删除用户所有信息
+	 * @param username
+	 * @return
+	 */
+	public boolean delUser(String username)
+	{
+		String sql = "select id from tbl_user where username=?";
+		long userid=(long)queryUniqueResult(sql, username)[0];
+		
+		sql  = "delete from tbl_contact where user_id=?";
+		if(dml(sql, userid))
+		{
+			sql = "delete from tbl_contact_type where user_id=?";
+			if(dml(sql, userid))
+			{
+				sql = "delete from tbl_user where id=?";
+				return dml(sql, userid);
+			}
+		}
+		return false;
 	}
 }

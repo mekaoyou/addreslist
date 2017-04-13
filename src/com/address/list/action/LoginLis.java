@@ -39,8 +39,8 @@ public class LoginLis implements ActionListener
 		//根据结果做出相应处理
 		if (b)
 		{
-			login.getSysIco().setUserFrame(new UserFrame(username));
-			login.getLoginFrame().dispose();
+			login.getSysIco().setUserFrame(new UserFrame(username, login));
+			login.getLoginFrame().setVisible(false);
 			if(login.getRemember().isSelected())
 			{
 				setAutoLogin(username);

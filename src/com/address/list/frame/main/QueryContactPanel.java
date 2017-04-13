@@ -113,7 +113,7 @@ public class QueryContactPanel extends JPanel
 		//Object[][] obj=ContactDao.getInstance().queryAll(username);
 		if (obj==null)
 		{
-			obj=new Object[1][4];
+			obj=new Object[1][columnTitle.length];
 		}
 		if(table != null)
 		{

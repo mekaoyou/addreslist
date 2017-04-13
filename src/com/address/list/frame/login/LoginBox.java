@@ -221,6 +221,13 @@ public class LoginBox
 			}
 		}
 	}
+	
+	public void clear()
+	{
+		userField.setText("");
+		passwordField.setText("");
+		remember.setSelected(false);
+	}
 
 	public JFrame getLoginFrame(){return loginFrame;}
 	public LimitTextField getUserField(){return userField;}
