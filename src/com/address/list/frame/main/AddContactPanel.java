@@ -52,7 +52,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	private JComboBox genderBox, typeBox;//选择项目类型，收入或支出的下拉列表
 	private JTextField dateField;//输入日期
 	private LimitTextField contactNameField,addressField,emailField,unitField;//描述信息，长度限制为20
-	private JButton dateBtn,handInBtn,clearBtn,imgBtn;//选择日期的按钮,提交按钮,清空按钮
+	private JButton dateBtn,handInBtn,clearBtn,imgBtn,plusBtn;//选择日期的按钮,提交按钮,清空按钮
 	private NumberField sumField,qqField,postField;//输入电话号码
 	private JTextArea remarkArea;//输入备注信息的textarea
 	private String username,img="tx.jpg";
@@ -172,7 +172,7 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 		typeBox=new JComboBox();
 		datePanel.add(typeBox);
 		
-		JButton plusBtn = new JButton("+");
+		plusBtn = new JButton("+");
 		datePanel.add(plusBtn);		
 		plusBtn.addActionListener(new AddContactTypeLisn(this.user.getUserFrame(), this));
 		
@@ -277,6 +277,8 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 
 		handInBtn.addActionListener(new AddItemLisn(this,username,user));//提交按钮
 		clearBtn.addActionListener(new ClearBtnLisn(this));//清除按钮
+
+		dateBtn.addActionListener(new SelectDateListn(dateBtn,dateField));//选择日期按钮
 	}
 	
 	private void setInfoBtn()
@@ -369,6 +371,8 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	
 	private void setEnable(boolean b)
 	{
+		plusBtn.setEnabled(false);
+		dateBtn.setEnabled(b);
 		genderBox.setEnabled(b);
 		typeBox.setEnabled(b);
 		dateField.setEditable(b);
@@ -429,7 +433,6 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	 */
 	private void initLisn()
 	{
-		dateBtn.addActionListener(new SelectDateListn(dateBtn,dateField));//选择日期按钮
 		remarkArea.addMouseListener(new PopupMenuAction(remarkArea));//备注右键菜单
 		remarkArea.addFocusListener(new JTextComponentFocuseLisn(remarkArea,"100个字以内"));
 	}
@@ -463,4 +466,5 @@ public class AddContactPanel extends JPanel implements UserEditPanel
 	public String getImg(){return img;}
 	public void setInfoDiaog(JDialog dialog){this.infoDialog = dialog;}
 	public JButton getHandInBtn(){return this.handInBtn;}
+	public JButton getDateBtn(){return this.dateBtn;}
 }

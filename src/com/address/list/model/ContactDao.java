@@ -80,7 +80,7 @@ public class ContactDao extends AbstractDao
 	 */
 	public Object[][] queryAll(String username)
 	{
-		String sql = "select a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id";
+		String sql = "select a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id order by a.id";
 		return transList(query(sql, username));
 	}
 
@@ -115,12 +115,12 @@ public class ContactDao extends AbstractDao
 		String sql = null;
 		if(type.equals("全部"))
 		{
-			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ?";
+			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? order by a.id";
 			return transList(query(sql, username, "%"+contact+"%"));
 		}
 		else
 		{
-			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? and c.type_name=?";
+			sql = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and a.contactname like ? and c.type_name=? order by a.id";
 			return transList(query(sql, username, "%"+contact+"%", type));
 		}
 	}
@@ -136,7 +136,7 @@ public class ContactDao extends AbstractDao
 		{
 			return queryAll(username);
 		}
-		String sql  = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and c.type_name=?";
+		String sql  = "select  a.id,a.contactname,a.moble,c.type_name,a.gender,a.qq,a.email,a.unit from tbl_contact a, tbl_user b, tbl_contact_type c where b.username=? and b.id=a.user_id and a.contact_type=c.id and c.type_name=?  order by a.id";
 		return transList(query(sql, username, type));
 	}
 	
@@ -151,11 +151,12 @@ public class ContactDao extends AbstractDao
 	 * @return
 	 */
 	public boolean update(long id, String moble, String gender, String birthday, String address, String remark, String type, String name,
-											String qq, String email, String post, String unit, String img)
+											String qq, String email, String post, String unit, String img, String username)
 	{
-		String sql ="update tbl_contact set contactname=?,moble=?,gender=?,birthday=?,address=?,remarked=?,contact_type=(select id from tbl_contact_type where type_name=?),"
+		String sql ="update tbl_contact set contactname=?,moble=?,gender=?,birthday=?,address=?,remarked=?,"
+				+ "contact_type=(select type.id from tbl_user u,tbl_contact_type type where u.id=type.user_id and u.username=? and type.type_name=?),"
 				+ "qq=?,email=?,post=?,unit=?,img=? where id=?";
-		return dml(sql, name, moble, gender, birthday, address, remark, type, qq, email, post, unit, img, id);
+		return dml(sql, name, moble, gender, birthday, address, remark, username, type, qq, email, post, unit, img, id);
 	}
 	/**
 	 * 增加联系人分组

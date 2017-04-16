@@ -10,9 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,7 +29,6 @@ import com.address.list.model.UserDao;
 
 /**
  * 系统登录框
- * 可选择登录身份，管理员或普通用户
  * @author Alex
  *
  */

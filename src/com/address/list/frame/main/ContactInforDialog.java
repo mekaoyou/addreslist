@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JDialog;
 
+import com.address.list.action.main.SelectDateListn;
 import com.address.list.frame.main.interFace.UserEditPanel;
 import com.address.list.model.ContactDao;
 import com.address.list.model.ContactEntity;
@@ -39,6 +40,7 @@ public class ContactInforDialog implements UserEditPanel
 		dialog.setResizable(false);
 		addPanel = new AddContactPanel(this.panel.getUsername(), user, type);
 		addPanel.setInfoDiaog(dialog);
+		addPanel.getDateBtn().addActionListener(new SelectDateListn(addPanel.getDateBtn(), addPanel.getDateField(), dialog));
 		
 		int row=panel.getTable().getSelectedRow();
 		//准备数据并加载

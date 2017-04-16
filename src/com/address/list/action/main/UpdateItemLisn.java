@@ -100,7 +100,7 @@ public class UpdateItemLisn implements ActionListener
 				address=address.substring(0, 20);
 			}
 			//执行数据库操作
-			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked, type, name, qq, email, post, unit, img))
+			if (ContactDao.getInstance().update((long)itemid, moble, gender, date, address, remarked, type, name, qq, email, post, unit, img, user.getUsername()))
 			{
 				//更新界面信息
 				panel.getTable().setValueAt(name, row, 1);
